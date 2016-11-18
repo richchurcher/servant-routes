@@ -1,14 +1,17 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Main where
 
-import Control.Monad.Trans.Except
-import Data.Aeson
-import Data.List
-import GHC.Generics
-import Network.Wai.Handler.Warp
+import Control.Monad.Trans.Except   (throwE)
+import Data.Aeson                   (ToJSON, FromJSON)
+import Data.List                    (find)
+import GHC.Generics                 (Generic)
+import Network.Wai                  (responseFile)
+import Network.HTTP.Types           (hContentType, status200)
+import Network.Wai.Handler.Warp     (run)
 import Servant
 
 data Wombat = Wombat
@@ -45,7 +48,15 @@ api = Proxy
 server :: Server API 
 server = wombats
   :<|> wombat
-  :<|> serveDirectory "static"
+  :<|> staticOrDefault
+
+staticOrDefault :: Application
+staticOrDefault req respond = respond $ 
+  responseFile
+  status200
+  [(hContentType, "text/html")]
+  "static/index.html"
+  Nothing
 
 app :: Application
 app = serve api server

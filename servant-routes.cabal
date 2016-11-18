@@ -3,7 +3,7 @@ version:             0.1.0.0
 synopsis:            Playing with Servant routes
 description:         Please see README.md
 homepage:            https://github.com/richchurcher/servant-routes#readme
-license:             ISC
+license:             Apache-2.0
 license-file:        LICENSE
 author:              Rich Churcher
 maintainer:          rich.churcher@gmail.com
@@ -18,8 +18,10 @@ executable servant-routes
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5
                      , aeson
+                     , http-types
                      , servant == 0.8.*
                      , servant-server
                      , transformers
+                     , wai
                      , warp
 
